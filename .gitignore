@@ -1,0 +1,4 @@
+node_modules/
+bench/results/
+bench/fixtures/*/.venv/
+__pycache__/

@@ -1,0 +1,26 @@
+[project]
+name = "clacks"
+version = "0.3.0"
+description = "A semaphore tower network."
+requires-python = ">=3.11"
+dependencies = ["grand-trunk"]
+
+[project.scripts]
+semaphore = "clacks.cli:main"
+
+[dependency-groups]
+dev = ["pytest>=8", "ruff>=0.5"]
+
+[tool.uv.sources]
+grand-trunk = { path = "vendor/grand-trunk" }
+
+[tool.ruff]
+line-length = 88
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"

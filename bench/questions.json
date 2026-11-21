@@ -1,0 +1,16 @@
+{
+  "about": "The kinds of question agents answer by hand about a Python project: which Python and virtualenv it uses and whether that agrees with the pin and requires-python, whether uv sync is up to date with the lock, why an import or a command fails, which packages build from source, what pyproject.toml declares, and what pytest and ruff say. Each is put to a small project that bench/make-fixture.sh prepares in bench/fixtures (run it once before the bench; the projects are committed, the script builds their virtualenvs and installs pytest and ruff into clacks, which needs network or a warm uv cache). Each names its project by path relative to the kit folder, because the kit otherwise answers about the project the agent works in. The pytest and ruff questions need those two installed in the clacks virtualenv.",
+  "questions": [
+    { "id": "pin-vs-requires", "q": "In bench/fixtures/clacks, which Python version does the project pin, and does the pin agree with requires-python?", "expect": ["3\\.10", "3\\.11", "outside|conflict|not (satisfy|allowed|accept)|disagree|below"] },
+    { "id": "script-not-found", "q": "In bench/fixtures/clacks, why does `uv run semaphore` say the command is not found?", "expect": ["build-system|package = true|not installed", "clacks\\.cli|semaphore"] },
+    { "id": "sync-state", "q": "In bench/fixtures/clacks, does the virtualenv match uv.lock, and is uv.lock current with pyproject.toml? Name a package that uv sync would install.", "expect": ["grand-trunk", "lock.{0,40}(current|agrees|up to date|matches)|(current|agrees|up to date|matches).{0,40}lock"] },
+    { "id": "import-fails", "q": "In bench/fixtures/clacks, `import grand_trunk` fails with ModuleNotFoundError. Why, and what fixes it?", "expect": ["grand[-_]trunk", "uv sync|not installed|not synced"] },
+    { "id": "own-package", "q": "In bench/fixtures/clacks, why can `import clacks` not be found in the project's virtualenv even though the source is in src/clacks?", "expect": ["build-system|package = true|not installed|not packaged", "src|PYTHONPATH|editable|uv sync"] },
+    { "id": "pytest-failures", "q": "Run the tests in bench/fixtures/clacks. Which fail, and with what assertion?", "expect": ["test_overhead_counts_both_ways", "6 == 7", "sector_nine"] },
+    { "id": "ruff-codes", "q": "Run ruff on bench/fixtures/clacks. Which rule codes fire, and are they fixable?", "expect": ["F401", "I001", "E401", "fix"] },
+    { "id": "no-wheel", "q": "In bench/fixtures/overseer, which locked packages have no wheel for Python 3.14 on this platform and would build from source?", "expect": ["ankh-native", "sdist-only-clock", "lamp-only-win"] },
+    { "id": "dev-group", "q": "In bench/fixtures/clacks, which dependency group holds pytest, and what are the ruff line length and the pytest test paths in pyproject.toml?", "expect": ["dev", "88", "tests"] },
+    { "id": "env-shot", "do": "env", "params": { "path": "bench/fixtures/clacks" }, "expect": ["\"requiresPython\": \">=3.11\"", "\"value\": \"3\\.10\"", "outside requires-python"] },
+    { "id": "wheels-shot", "do": "wheels", "params": { "path": "bench/fixtures/overseer", "python": "3.14" }, "expect": ["\"buildFromSource\"", "ankh-native", "\"noWheelNoSdist\"", "lamp-only-win"] }
+  ]
+}
