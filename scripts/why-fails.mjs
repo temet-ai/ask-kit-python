@@ -13,7 +13,7 @@ export default async function ({ py }, { module, package: pkgArg, command, path 
   const p = path ? py.at(path) : py;
   if (!module && !command) throw new Error("pass module (an import that fails) or command (an executable that is not found)");
   const { root } = p.root();
-  const [project, venv, lock] = [await p.project(), await p.venv(), await p.lock().catch(() => null)];
+  const [project, venv, lock] = await Promise.all([p.project(), p.venv(), p.lock().catch(() => null)]);
   const out = { root, venv: { exists: venv.exists, dir: venv.dir, version: venv.version ?? null, source: venv.source } };
   const diagnosis = [];
   const next = [];

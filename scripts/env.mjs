@@ -10,11 +10,8 @@ export const meta = {
 export default async function ({ py }, { path } = {}) {
   const p = path ? py.at(path) : py;
   const { root, lockRoot } = p.root();
-  const project = await p.project();
   const pins = p.pins();
-  const lock = await p.lock().catch(() => null);
-  const venv = await p.venv();
-  const box = await p.toolchain();
+  const [project, lock, venv, box] = await Promise.all([p.project(), p.lock().catch(() => null), p.venv(), p.toolchain()]);
   const why = [];
   const problems = [];
 
