@@ -1,6 +1,6 @@
 id = "temet.python"
 name = "python"
-version = "0.1.0"
+version = "0.1.1"
 min_ask_kit = "0.2.0"
 requires = ["python3"]
 says = "a Python project and its environment as it is now: which Python and which virtualenv it uses and why (.python-version, requires-python, uv.lock, .venv, pyenv, mise), whether uv sync is up to date with the lock, why uv run or an import fails (wrong interpreter, a package missing from the venv, a script that uv never installed, a package that builds from source because no wheel fits this Python), what pyproject.toml declares (scripts, entry points, dependency groups, ruff, mypy and pytest settings), and running the project's pytest, ruff, mypy or pyright and saying what failed; and acting on it (uv sync, add, remove, lock, pin a Python version, ruff --fix, ruff format)"
@@ -15,6 +15,7 @@ acts = [
   "ruff check --fix, ruff check --add-noqa and ruff format (the project's source files)",
   "py.edit of pyproject.toml, ruff.toml, mypy.ini, pytest.ini, setup.cfg, tox.ini, pyrightconfig.json and .python-version",
 ]
+reads = ["uv tree", "uv pip list", "uv python list", "pip show"]
 
 [[settings]]
 key = "PY_CHECK_TIMEOUT_SECONDS"
